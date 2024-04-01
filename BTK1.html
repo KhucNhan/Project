@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng dụng quản lý sản phẩm</title>
+    <style>
+        table {
+            position: relative;
+            width: fit-content;
+
+            & td {
+                padding: 10px;
+            }
+        }
+
+        button {
+            outline: none;
+            border: 1px solid black;
+            border-radius: 5px;
+            background-color: lightgreen;
+            padding: 5px 10px;
+            font-weight: 700;
+        }
+
+        button:hover {
+            background-color: rgb(2, 166, 2);
+        }
+
+        [id^=name] {
+            width: 350px;
+        }
+
+        #addItem {
+            padding-left: 15px;
+            margin-right: 10px;
+            border-radius: 25px;
+            outline: none;
+            padding-block: 5px;
+            border: 1px solid black;
+        }
+
+        hr {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="reload"></div>
+
+    <script>
+
+        // mảng chứa tên sản phẩm
+        var productList = [];
+
+
+
+        // hàm xóa và sửa tên sản phẩm
+        function del(i) {
+            var checkConfirm = confirm('Do you really want to remove it ?');
+            if (checkConfirm == false) {
+                table();
+            } else {
+                let element = document.getElementById('product' + i);
+                element.remove(); // xóa sự hiện diện trên giao diện web
+                productList.splice(i, 1); // xóa dữ liệu trong mảng
+                table(); // tạo lại bảng với dữ liệu mới
+            }
+        }
+
+        function edit(i) {
+            let nameProduct = document.getElementById('name' + i);
+            nameProduct = prompt('Đổi tên sản phẩm', nameProduct.textContent);
+            document.getElementById('name' + i).innerHTML = nameProduct; // thay đổi giao diện
+            productList[i] = nameProduct; // thay đổi giá trị trong mảng
+        }
+
+
+
+        // hàm thêm sản phẩm vào mảng và hiển thị lại trang
+        function Add() {
+            if (document.getElementById('addItem').value == '') {
+                // alert('vui lòng nhập lại !!!');
+            } else {
+                productList.push(document.getElementById('addItem').value); // thêm phần tử vào cuối mảng
+                table(); // tạo lại bảng với dữ liêu mới
+            }
+        }
+
+
+
+        // tạo ô input thêm phần tử.
+        var c = '<form><input type="text" required min-length="1" style="border-radius:5px;" placeholder="Add item here"  id="addItem"><button style="border-radius:5px;border:1px solid black;" onclick="Add()">Add</button></form>'
+
+
+
+        // hàm tạo và gọi bảng
+        function table() {
+            // tạo dòng thông tin
+            var d = '<hr><div style="width:527px;position:relative;"><pre style="font-weight: 700; font-size: 16px;">Product Name</pre><pre style="position:absolute; bottom: -18.5px; right:0; font-size:16px; color: red;">' + productList.length + ' Items' + '</pre></div>';
+
+            var a;
+            a = '<table cellspacing="0" id="table">';
+            for (i = 0; i < productList.length; i++) {
+                if (i % 2 == 0) {
+                    a += '<tr style="background-color:white;" id="product' + i + '">';
+                    a += '<td id="name' + i + '">' + productList[i] + '</td>';
+                    a += '<td><button onclick="edit(' + i + ')">Edit</button></td>';
+                    a += '<td><button onclick="del(' + i + ')">Remove</button></td>';
+                    a += '</tr>';
+                } else {
+                    a += '<tr style="background-color:lightgray;" id="product' + i + '">';
+                    a += '<td style="background-color:lightgray;" id="name' + i + '">' + productList[i] + '</td>';
+                    a += '<td style="background-color:lightgray;"><button onclick="edit(' + i + ')">Edit</button></td>';
+                    a += '<td style="background-color:lightgray;"><button onclick="del(' + i + ')">Remove</button></td>';
+                    a += '</tr>';
+                }
+            }
+            a += '</table>';
+
+            // khởi tạo bảng và nút thêm
+            document.getElementById('reload').innerHTML = c + d + a;
+        }
+
+        table();
+    </script>
+</body>
+
+</html>
